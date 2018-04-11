@@ -20,4 +20,23 @@ export default class DeliveryController {
     if (!entity) throw new NotFoundError('An error occured')
     return entity
   }
+
+  @Get('/deliveries')
+  async getDeliveries(
+  ){
+    const notSorted = await Delivery.find()
+    return notSorted.sort((a,b)=>{
+      if(!b.id || !a.id) return -1
+      return a.id-b.id
+    })
+  }
+
+  @Get('/deliveries/:id')
+  async getDelivery(
+    @Param('id') id: number
+  ){
+    const delivery = await Delivery.findOneById(id)
+    if (!delivery) throw new NotFoundError('No such delivery')
+    return delivery
+  }
 }
