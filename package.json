@@ -24,6 +24,7 @@
   "scripts": {
     "start": "node .",
     "dev": "nodemon .",
-    "compile": "tsc -p ."
+    "compile": "tsc -p .",
+    "seed": "node target/seeds.js"
   }
 }
