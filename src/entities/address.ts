@@ -3,9 +3,9 @@ import { BaseEntity } from 'typeorm/repository/BaseEntity';
 import {Order} from './order'
 
 export type AddressType =
-  | 'visit address'
-  | 'invoice address'
-  | ' delivery address';
+  | 'visit'
+  | 'invoice'
+  | 'delivery';
 
 @Entity({name: 'addresses'})
 export class Address extends BaseEntity {
