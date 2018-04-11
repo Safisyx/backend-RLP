@@ -1,43 +1,43 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from "typeorm";
-import { BaseEntity } from "typeorm/repository/BaseEntity";
-import { Exclude } from "class-transformer";
-import { MinLength, IsString, IsEmail } from "class-validator";
-import * as bcrypt from "bcrypt";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from 'typeorm';
+import { BaseEntity } from 'typeorm/repository/BaseEntity';
+import { Exclude } from 'class-transformer';
+import { MinLength, IsString, IsEmail } from 'class-validator';
+import * as bcrypt from 'bcrypt';
 import {Order} from './order'
 
 @Entity()
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn() id?: number;
 
-  @Column("text", { nullable: false })
+  @Column('text', { nullable: false })
   companyName: string;
 
   @IsString()
   @MinLength(2)
-  @Column("text")
+  @Column('text')
   firstName: string;
 
   @IsString()
   @MinLength(2)
-  @Column("text")
+  @Column('text')
   lastName: string;
 
   @IsEmail()
-  @Column("text")
+  @Column('text')
   email: string;
 
   @IsString()
   @MinLength(8)
-  @Column("text")
+  @Column('text')
   @Exclude({ toPlainOnly: true })
   password: string;
 
   @IsString()
-  @Column("text", {default: "External User"})
+  @Column('text', {default: 'External User'})
   role: string
 
   @IsString()
-  @Column("text", { nullable: false })
+  @Column('text', { nullable: false })
   telefoonNummer: string;
 
   @ManyToOne(_ => Order, order => order.user)
