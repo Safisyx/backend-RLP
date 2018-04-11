@@ -28,17 +28,17 @@ export class User extends BaseEntity {
 
   @IsString()
   @MinLength(8)
-  @Column('text')
+  @Column('text', {nullable: true})
   @Exclude({ toPlainOnly: true })
   password: string;
 
   @IsString()
-  @Column('text', {default: 'External User'})
+  @Column('text', {default: 'External'})
   role: string
 
   @IsString()
-  @Column('text', { nullable: false })
-  telefoonNummer: string;
+  @Column('text', { nullable: true })
+  telephoneNumber: string;
 
   @OneToMany(_ => Order, order => order.user, {eager: true})
   orders: Order[];

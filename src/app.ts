@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import {createKoaServer} from 'routing-controllers'
 import { Action, BadRequestError } from 'routing-controllers';
 import { verify } from './jwt';
-import {User} from './entities/user'
+
 
 export default createKoaServer({
   cors: true,
@@ -18,19 +18,19 @@ export default createKoaServer({
         throw new BadRequestError(e);
       }
     }
-
     return false;
   },
+
   currentUserChecker: async (action: Action) => {
     const header: string = action.request.headers.authorization;
     if (header && header.startsWith('Bearer ')) {
       const [, token] = header.split(' ');
 
       if (token) {
-        const id = verify(token);
-        return User.findOneById(id);
+        const { id, role } = verify(token);
+        return { id, role }
       }
     }
-    return undefined;
+    return {};
   }
 });
