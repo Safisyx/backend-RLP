@@ -51,4 +51,17 @@ export default class DeliveryController {
       message: 'Successfully removed'
     }
   }
+
+  @Patch('/deliveries/:id')
+  async patchDelivery(
+    @Param('id') id: number,
+    @Body() {deliveryType, condition}
+  ){
+    const delivery = await Delivery.findOneById(id)
+    if (!delivery) throw new NotFoundError('No such delivery')
+    if (deliveryType) delivery.deliveryType=deliveryType
+    if (condition) delivery.condition=condition
+    await delivery.save()
+    return delivery
+  }
 }
