@@ -23,10 +23,10 @@ export class Address extends BaseEntity {
   @Column('text', { nullable: false })
   type: AddressType;
 
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: true })
   telephoneNumber: string;
 
-  @Column('text', { nullable: false })
+  @Column('text', { nullable: true })
   contactPerson: string;
 
   @ManyToOne(_ => Order, order => order.addresses)
