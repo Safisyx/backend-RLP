@@ -1,0 +1,29 @@
+{
+  "name": "flexicon_api",
+  "version": "1.0.0",
+  "main": "target/index.js",
+  "author": "Safisyx <safisyx@gmail.com>, Bianca <biancasteyn91@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@types/koa": "^2.0.44",
+    "@types/koa-bodyparser": "^4.2.0",
+    "@types/koa-multer": "^1.0.0",
+    "@types/koa-router": "^7.0.27",
+    "bcrypt": "^1.0.3",
+    "jsonwebtoken": "^8.2.0",
+    "kcors": "^2.2.1",
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-multer": "^1.0.2",
+    "koa-router": "^7.4.0",
+    "pg": "^7.4.1",
+    "routing-controllers": "^0.7.7",
+    "typeorm": "^0.1.20",
+    "typescript": "^2.8.1"
+  },
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon .",
+    "compile": "tsc -p"
+  }
+}
