@@ -43,9 +43,11 @@ export class Order extends BaseEntity {
   @RelationId((order: Order)=> order.delivery)
   deliveryId: number
 
+  @ManyToOne(_ => User, user => user.orders)
+  user: User
 
-  @OneToMany(_ => User, users => users.order, {eager: true})
-  user: User[];
+  @RelationId((order: Order)=> order.user)
+  userId: number
 
   @OneToMany(_ => Address, addresses => addresses.order, {eager: true})
   addresses: Address[]
