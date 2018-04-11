@@ -7,7 +7,7 @@ export type AddressType =
   | " delivery address";
 
 @Entity({name: "addresses"})
-export default class Address extends BaseEntity {
+export class Address extends BaseEntity {
   @PrimaryGeneratedColumn() id?: number;
 
   @Column("text", { nullable: false })

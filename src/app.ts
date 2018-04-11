@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import {createKoaServer} from "routing-controllers"
 import { Action, BadRequestError } from "routing-controllers";
 import { verify } from "./jwt";
-import User from "./entities/user"
+import {User} from "./entities/user"
 
 export default createKoaServer({
   cors: true,

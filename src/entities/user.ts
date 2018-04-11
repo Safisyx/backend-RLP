@@ -1,11 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from "typeorm";
 import { BaseEntity } from "typeorm/repository/BaseEntity";
 import { Exclude } from "class-transformer";
 import { MinLength, IsString, IsEmail } from "class-validator";
 import * as bcrypt from "bcrypt";
+import {Order} from './order'
 
 @Entity()
-export default class User extends BaseEntity {
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn() id?: number;
 
   @Column("text", { nullable: false })
@@ -38,6 +39,12 @@ export default class User extends BaseEntity {
   @IsString()
   @Column("text", { nullable: false })
   telefoonNummer: string;
+
+  @ManyToOne(_ => Order, order => order.user)
+  order: Order
+
+  @RelationId((user: User)=> user.order)
+  deliveryId: number
 
   async setPassword(rawPassword: string) {
     const hash = await bcrypt.hash(rawPassword, 10);
