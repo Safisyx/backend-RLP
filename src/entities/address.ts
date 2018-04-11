@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
+import {Order} from './order'
 
 export type AddressType =
   | 'visit address'
@@ -21,4 +22,10 @@ export class Address extends BaseEntity {
 
   @Column('text', { nullable: false })
   type: AddressType;
+
+  @ManyToOne(_ => Order, order => order.addresses)
+  order: Order
+
+  @RelationId((address: Address)=> address.order)
+  orderId: number
 }

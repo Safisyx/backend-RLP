@@ -2,6 +2,7 @@ import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, ManyToOne, Relation
 import {IsInt, IsString, Min, MinLength, IsDate} from 'class-validator'
 import {Delivery} from './delivery'
 import {User} from './user'
+import {Address} from './address'
 
 @Entity()
 export class Order extends BaseEntity {
@@ -43,6 +44,9 @@ export class Order extends BaseEntity {
   deliveryId: number
 
 
-  @OneToMany(_ => User, users => users.order)
+  @OneToMany(_ => User, users => users.order, {eager: true})
   user: User[];
+
+  @OneToMany(_ => Address, addresses => addresses.order, {eager: true})
+  addresses: Address[]
 }
