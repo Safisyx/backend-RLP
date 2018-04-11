@@ -1,6 +1,8 @@
-import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, ManyToOne, RelationId } from 'typeorm'
+import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, ManyToOne, RelationId, OneToMany } from 'typeorm'
 import {IsInt, IsString, Min, MinLength, IsDate} from 'class-validator'
 import {Delivery} from './delivery'
+import {User} from './user'
+import {Address} from './address'
 
 @Entity()
 export class Order extends BaseEntity {
@@ -40,4 +42,11 @@ export class Order extends BaseEntity {
 
   @RelationId((order: Order)=> order.delivery)
   deliveryId: number
+
+
+  @OneToMany(_ => User, users => users.order, {eager: true})
+  user: User[];
+
+  @OneToMany(_ => Address, addresses => addresses.order, {eager: true})
+  addresses: Address[]
 }
