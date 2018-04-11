@@ -39,4 +39,16 @@ export default class DeliveryController {
     if (!delivery) throw new NotFoundError('No such delivery')
     return delivery
   }
+
+  @Delete('/deliveries/:id')
+  async deleteDelivery(
+    @Param('id') id: number
+  ){
+    const delivery = await Delivery.findOneById(id)
+    if (!delivery) throw new NotFoundError('No such delivery')
+    delivery.remove()
+    return {
+      message: 'Successfully removed'
+    }
+  }
 }
