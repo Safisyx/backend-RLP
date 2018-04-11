@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, RelationId } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
 import { Exclude } from 'class-transformer';
 import { MinLength, IsString, IsEmail } from 'class-validator';
@@ -40,11 +40,9 @@ export class User extends BaseEntity {
   @Column('text', { nullable: false })
   telefoonNummer: string;
 
-  @ManyToOne(_ => Order, order => order.user)
-  order: Order
+  @OneToMany(_ => Order, order => order.user, {eager: true})
+  orders: Order[];
 
-  @RelationId((user: User)=> user.order)
-  deliveryId: number
 
   async setPassword(rawPassword: string) {
     const hash = await bcrypt.hash(rawPassword, 10);
