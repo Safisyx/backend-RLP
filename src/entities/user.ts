@@ -33,7 +33,7 @@ export class User extends BaseEntity {
   password: string;
 
   @IsString()
-  @Column('text', {default: 'External User'})
+  @Column('text', {default: 'External'})
   role: string
 
   @IsString()
