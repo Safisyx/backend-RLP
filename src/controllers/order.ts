@@ -30,4 +30,19 @@ export default class OrderController {
     if (!orderToSend) throw new NotFoundError('An error occured')
     return orderToSend
   }
+
+  @Get('/orders')
+  async getOrders(
+  ){
+    return await Order.find()
+  }
+
+  @Get('/orders/:id')
+  async getOrder(
+    @Param('id') id: number
+  ){
+    const order = await Order.findOneById(id)
+    if (!order) throw new NotFoundError('No such order')
+    return order
+  }
 }
