@@ -1,10 +1,9 @@
 import {
   JsonController, Authorized, CurrentUser, Post, Param, HttpCode, NotFoundError, BadRequestError, Get,
-  Body, Patch, Delete
+  Body
 } from 'routing-controllers'
 import {Order} from '../entities/order'
 import {Address} from '../entities/address'
-import {User} from '../entities/user'
 import {Delivery} from '../entities/delivery'
 
 @JsonController()
