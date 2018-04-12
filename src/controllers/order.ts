@@ -10,6 +10,7 @@ import {Delivery} from '../entities/delivery'
 @JsonController()
 export default class OrderController {
 
+  @Authorized()
   @Post('/orders')
   @HttpCode(201)
   async createOrders(
@@ -31,16 +32,22 @@ export default class OrderController {
     return orderToSend
   }
 
+  @Authorized()
   @Get('/orders')
   async getOrders(
+    @CurrentUser() {id,role}
   ){
-    return await Order.find()
+    if (role==='Internal') return await Order.find()
+    return await Order.find({where:{userId:id}})
   }
 
+  @Authorized()
   @Get('/orders/:id')
   async getOrder(
-    @Param('id') id: number
+    @Param('id') id: number,
+    @CurrentUser() currentUser
   ){
+    if (currentUser.id!==id) throw new BadRequestError('You are not allowed to view that')
     const order = await Order.findOneById(id)
     if (!order) throw new NotFoundError('No such order')
     return order
