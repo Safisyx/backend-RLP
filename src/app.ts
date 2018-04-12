@@ -5,13 +5,16 @@ import { verify } from './jwt';
 
 import OrderController from './controllers/order'
 import DeliveryController from './controllers/delivery'
-
+import LoginController from './controllers/login'
+import UserController from './controllers/users'
 
 export default createKoaServer({
   cors: true,
   controllers: [
     OrderController,
-    DeliveryController
+    DeliveryController,
+    LoginController,
+    UserController
   ],
     authorizationChecker: (action: Action) => {
     const header: string = action.request.headers.authorization;

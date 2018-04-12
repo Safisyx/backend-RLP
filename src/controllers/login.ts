@@ -1,9 +1,9 @@
 import { IsString } from 'class-validator'
-import { JsonController, Post, Body } from 'routing-controllers'
+import { JsonController, Post, Body, BadRequestError } from 'routing-controllers'
 import { sign } from '../jwt'
-import * as request from 'superagent'
+import {User} from '../entities/user'
 
-const usersUrl = process.env.USERS_URL || 'http://localhost:3008'
+//const usersUrl = process.env.USERS_URL || 'http://localhost:'
 
 class AuthenticatePayload {
   @IsString()
@@ -19,19 +19,14 @@ export default class LoginController {
 
   @Post('/logins')
   async authenticate(
-    @Body() body: AuthenticatePayload
-    //body includes email and password
+    @Body() { email, password }: AuthenticatePayload
   ) {
-    return request
-      .post(`${usersUrl}/users`)
+    const user = await User.findOne({ where: { email } })
+    if (!user) throw new BadRequestError('A user with this email does not exist')
 
-      .send(body)
-      .then(function(res) {
-        const jwt = sign({ id: res.body.id!, role: res.body.role! })
-        return { jwt }
-      })
-      .catch(err => {
-        return {message: err.message}
-      })
-    }
+    if (!await user.checkPassword(password)) throw new BadRequestError('The password is not correct')
+
+    const jwt = sign({ id: user.id!, role: user.role! })
+    return { jwt }
+  }
 }
