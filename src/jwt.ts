@@ -13,3 +13,15 @@ export const sign = (data: JwtPayload) =>
 
 export const verify = (token: string): JwtPayload =>
   jwt.verify(token, secret) as JwtPayload
+
+interface JwtSignup {
+  id: number,
+  role: string,
+  email: string,
+}
+
+export const signup = (data: JwtSignup) =>
+  jwt.sign(data, secret, { expiresIn: 3600*24 }) //24hours
+
+export const verifySignup = (token: string): JwtSignup =>
+  jwt.verify(token, secret) as JwtSignup
