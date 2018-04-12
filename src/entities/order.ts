@@ -54,7 +54,7 @@ export class Order extends BaseEntity {
   @OneToMany(_ => Address, addresses => addresses.order, {eager: true})
   addresses: Address[]
 
-  @OneToOne(_=> Channel, channel => channel.order, {eager: true})
-  @JoinColumn()
-  channel: Channel
+  // @OneToOne(_=> Channel, channel => channel.order, {eager: true})
+  // @JoinColumn()
+  // channel: Channel
 }
