@@ -17,7 +17,7 @@ export class Order extends BaseEntity {
 
   @IsString()
   @Column('text', {nullable: true})
-  decription: string
+  description: string
 
   @IsInt()
   @Min(1)

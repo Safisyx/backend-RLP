@@ -3,10 +3,16 @@ import {createKoaServer} from 'routing-controllers'
 import { Action, BadRequestError } from 'routing-controllers';
 import { verify } from './jwt';
 
+import OrderController from './controllers/order'
+import DeliveryController from './controllers/delivery'
+
 
 export default createKoaServer({
   cors: true,
-  controllers: [],
+  controllers: [
+    OrderController,
+    DeliveryController
+  ],
     authorizationChecker: (action: Action) => {
     const header: string = action.request.headers.authorization;
     if (header && header.startsWith('Bearer ')) {
