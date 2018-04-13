@@ -1,9 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, OneToOne, ManyToMany } from 'typeorm';
 import { BaseEntity } from 'typeorm/repository/BaseEntity';
 import { Exclude } from 'class-transformer';
 import { MinLength, IsString, IsEmail } from 'class-validator';
 import * as bcrypt from 'bcrypt';
 import {Order} from './order'
+import {Message} from './message'
+import {Channel} from './channel'
 
 @Entity()
 export class User extends BaseEntity {
@@ -43,6 +45,11 @@ export class User extends BaseEntity {
   @OneToMany(_ => Order, order => order.user, {eager: true})
   orders: Order[];
 
+  @OneToMany(_=> Message, messages => messages.user)
+  messages: Message[]
+
+  @ManyToMany(_=> Channel, channel => channel.users)
+  channels: Channel[]
 
   async setPassword(rawPassword: string) {
     const hash = await bcrypt.hash(rawPassword, 10);
