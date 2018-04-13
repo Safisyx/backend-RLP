@@ -1,5 +1,6 @@
 import {Delivery} from './entities/delivery'
 import setupDb from './db'
+import {User} from './entities/user'
 
 const seedDelivery = async () => {
   const delivery1 = {
@@ -20,8 +21,24 @@ const seedDelivery = async () => {
   await Delivery.create(delivery3).save()
 }
 
+const seedUser = async () => {
+  const user = {
+    lastName:'User',
+    firstName:'Super',
+    email:'super@example.com',
+    companyName: 'SUPER',
+    role: 'Internal',
+  }
+  const password='SuperUser'
+
+  const superUser = await User.create(user).save()
+  await superUser.setPassword(password)
+  await superUser.save()
+}
+
 const runSeeds = async () => {
   await seedDelivery()
+  await seedUser()
 }
 
 setupDb()
