@@ -2,18 +2,19 @@ import {
   JsonController, Authorized, CurrentUser, Post, Param, HttpCode, NotFoundError, BadRequestError, Get,
   Body, Patch, Delete
 } from 'routing-controllers'
-import {Order} from '../entities/order'
 import {Delivery} from '../entities/delivery'
 
 @JsonController()
 export default class DeliveryController {
 
+  @Authorized()
   @Post('/deliveries')
   @HttpCode(201)
   async createDelivery(
     @Body() {deliveryType, condition},
+    @CurrentUser() {role}
   ) {
-
+    if (role!=='Internal') throw new BadRequestError('You are not allowed to do that')
     const delivery = await Delivery.create({deliveryType, condition}).save()
 
     const entity= await Delivery.findOneById(delivery.id)
@@ -21,6 +22,7 @@ export default class DeliveryController {
     return entity
   }
 
+  @Authorized()
   @Get('/deliveries')
   async getDeliveries(
   ){
@@ -31,6 +33,7 @@ export default class DeliveryController {
     })
   }
 
+  @Authorized()
   @Get('/deliveries/:id')
   async getDelivery(
     @Param('id') id: number
@@ -40,10 +43,13 @@ export default class DeliveryController {
     return delivery
   }
 
+  @Authorized()
   @Delete('/deliveries/:id')
   async deleteDelivery(
-    @Param('id') id: number
+    @Param('id') id: number,
+    @CurrentUser() {role}
   ){
+    if (role!=='Internal') throw new BadRequestError('You are not allowed to do that')
     const delivery = await Delivery.findOneById(id)
     if (!delivery) throw new NotFoundError('No such delivery')
     delivery.remove()
@@ -52,11 +58,14 @@ export default class DeliveryController {
     }
   }
 
+  @Authorized()
   @Patch('/deliveries/:id')
   async patchDelivery(
     @Param('id') id: number,
-    @Body() {deliveryType, condition}
+    @Body() {deliveryType, condition},
+    @CurrentUser() {role}
   ){
+    if (role!=='Internal') throw new BadRequestError('You are not allowed to do that')
     const delivery = await Delivery.findOneById(id)
     if (!delivery) throw new NotFoundError('No such delivery')
     if (deliveryType) delivery.deliveryType=deliveryType
