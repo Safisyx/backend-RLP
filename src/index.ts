@@ -67,10 +67,25 @@ io.on('connect', socket => {
   const name = socket.request.user.firstName
   console.log(`User ${name} just connected`)
 
+  socket.on('room', room => {
+    socket.join(room)
+    console.log('join room===>', room)
+  })
+
+  socket.on('leave', room => {
+    socket.leave(room)
+    console.log('Leave room===>', room)
+  })
   socket.on('disconnect', () => {
     console.log(`User ${name} just disconnected`)
+    socket.on('room', room => {
+      socket.leave(room)
+    })
   })
 })
+
+const room = 'MyRoom'
+io.in(room).emit('message', 'What is going on')
 
 setupDb()
   .then(_ => {

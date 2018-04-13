@@ -1,6 +1,7 @@
 import { JsonController, Post, Param, Get, Patch, NotFoundError, Body, Delete, Authorized, CurrentUser, BadRequestError } from 'routing-controllers'
 import {User} from '../entities/user';
 import { sign, signup, verifySignup } from '../jwt'
+import {io} from '../index'
 
 @JsonController()
 export default class UserController {
@@ -21,7 +22,7 @@ export default class UserController {
     await user.save()
     if (!await user.checkPassword(password)) throw new BadRequestError('The password is not correct')
     const jwt = sign({ id: user.id!, role: user.role! })
-    return { jwt }
+    return { jwt, id: user.id}
   }
 
   @Authorized()
@@ -67,8 +68,9 @@ export default class UserController {
     if (role !== 'Internal') throw new BadRequestError('Cannot create user')
     const {password, ...rest} = user
     const userToSend = await User.create(rest).save()
+    const userRole=(!userToSend.role)? 'External': userToSend.role
     return {
-      jwt:signup({ id: userToSend.id!, role: userToSend.role!, email: userToSend.email! })
+      jwt:signup({ id: userToSend.id!, role: userRole, email: userToSend.email! })
     }
   }
 
@@ -98,5 +100,13 @@ export default class UserController {
       if (!user) throw new NotFoundError('Cannot find user')
       user.remove()
       return "user succesfully deleted"
+    }
+
+    @Post('/tests')
+    async test(
+    @Body() {message,room}
+    ){
+    io.to(room).emit('message',message)
+    return 'sssh'
     }
   }
