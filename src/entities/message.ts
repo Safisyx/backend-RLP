@@ -19,7 +19,6 @@ export class Message extends BaseEntity {
   condition: string
 
   @ManyToOne(_ => User, user => user.messages)
-  @JoinColumn()
   user: User
 
   @RelationId((message: Message)=> message.user)
