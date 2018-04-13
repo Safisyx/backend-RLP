@@ -1,16 +1,19 @@
 import { JsonController, Post, Param, Get, Patch, NotFoundError, Body, Delete, Authorized, CurrentUser, BadRequestError } from 'routing-controllers'
 import {User} from '../entities/user';
-import { sign } from '../jwt'
+import { sign, signup, verifySignup } from '../jwt'
 
 @JsonController()
 export default class UserController {
 //for authorization at this point there is a lack in security (authentication)... users can access by changing other user's password easier.
-// We need to fix that 
-  @Patch('/signup/:id([0-9]+)')
+// We need to fix that
+  @Patch('/signup/:jwtSignup')
   async signupUser(
-    @Param('id') id: number,
+    @Param('jwtSignup') jwtSignup: string,
     @Body() {password}
   ) {
+    const {id,role,email}=verifySignup(jwtSignup)
+    console.log(id,role,email)
+    if (!id || !role || !email) throw new BadRequestError('ERROR ERROR ERROR')
     const user = await User.findOneById(id)
     if (!user) throw new NotFoundError('Cannot find user')
     console.log(password)
@@ -56,16 +59,33 @@ export default class UserController {
 
   @Authorized()
   @Post('/users')
-    async createUser(
-      @CurrentUser() { role },
-      @Body() user
-    ) {
+  async createUser(
+    @CurrentUser() { role },
+    @Body() user
+  ) {
 
-      if (role !== 'Internal') throw new BadRequestError('Cannot create user')
-      const {password, ...rest} = user
-      await User.create(rest).save()
-      return user
+    if (role !== 'Internal') throw new BadRequestError('Cannot create user')
+    const {password, ...rest} = user
+    const userToSend = await User.create(rest).save()
+    return {
+      jwt:signup({ id: userToSend.id!, role: userToSend.role!, email: userToSend.email! })
     }
+  }
+
+  @Authorized()
+  @Get('/jwt/:email')
+  async getJwt(
+    @Param('email') email: string,
+    @CurrentUser() {role}
+  ){
+    if (role !== 'Internal') throw new BadRequestError('You cannot do that')
+    const user = await User.findOne({where:{email}})
+    if (!user) throw new NotFoundError('User not found')
+    return {
+      jwt:signup({ id: user.id!, role: user.role!, email: user.email! })
+    }
+  }
+
 
     @Authorized()
     @Delete('/users/:id([0-9]+)')
