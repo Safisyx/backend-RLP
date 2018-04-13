@@ -45,8 +45,8 @@ export class User extends BaseEntity {
   @OneToMany(_ => Order, order => order.user, {eager: true})
   orders: Order[];
 
-  @OneToOne(_=> Message, message => message.user)
-  message: Message
+  @OneToMany(_=> Message, messages => messages.user)
+  messages: Message[]
 
   @ManyToMany(_=> Channel, channel => channel.users)
   channels: Channel[]

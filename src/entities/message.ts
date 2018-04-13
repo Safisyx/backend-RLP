@@ -1,4 +1,4 @@
-import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, OneToOne, JoinColumn, ManyToOne} from 'typeorm'
+import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, RelationId, JoinColumn, ManyToOne} from 'typeorm'
 import {IsString, MinLength} from 'class-validator'
 import {User} from './user'
 import {Channel} from './channel'
@@ -18,10 +18,17 @@ export class Message extends BaseEntity {
   @Column('text')
   condition: string
 
-  @OneToOne(_ => User, user => user.message)
+  @ManyToOne(_ => User, user => user.messages)
   @JoinColumn()
   user: User
 
+  @RelationId((message: Message)=> message.user)
+  userId: number
+
   @ManyToOne(_=>Channel, channel=>channel.messages)
   channel: Channel
+
+  @RelationId((message: Message)=> message.channel)
+  channelId: number
+
 }
