@@ -14,6 +14,7 @@ import OrderController from './controllers/order'
 import DeliveryController from './controllers/delivery'
 import LoginController from './controllers/login'
 import UserController from './controllers/users'
+import MessageController from './controllers/message'
 import {User} from './entities/user'
 
 const app = new Koa()
@@ -27,7 +28,8 @@ useKoaServer(app, {
     OrderController,
     DeliveryController,
     LoginController,
-    UserController
+    UserController,
+    MessageController
   ],
   authorizationChecker: (action: Action) => {
   const header: string = action.request.headers.authorization;
@@ -37,25 +39,25 @@ useKoaServer(app, {
     try {
       return !!(token && verify(token));
     } catch (e) {
-      throw new BadRequestError(e);
+        throw new BadRequestError(e);
+      }
     }
-  }
   return false;
-},
+  },
 
-currentUserChecker: async (action: Action) => {
-  const header: string = action.request.headers.authorization;
-  if (header && header.startsWith('Bearer ')) {
-    const [, token] = header.split(' ');
+  currentUserChecker: async (action: Action) => {
+    const header: string = action.request.headers.authorization;
+    if (header && header.startsWith('Bearer ')) {
+      const [, token] = header.split(' ');
 
-    if (token) {
-      const { id, role } = verify(token);
-      return { id, role }
+      if (token) {
+        const { id, role } = verify(token);
+        return { id, role }
+      }
     }
+    return {};
   }
-  return {};
-}
-})
+  })
 
 io.use(socketIoJwtAuth.authenticate({ secret }, async (payload, done) => {
   const user = await User.findOneById(payload.id)
@@ -64,28 +66,28 @@ io.use(socketIoJwtAuth.authenticate({ secret }, async (payload, done) => {
 }))
 
 io.on('connect', socket => {
-  const name = socket.request.user.firstName
-  console.log(`User ${name} just connected`)
+  const user = socket.request.user
+  console.log(`User ${user.firstName} just connected`)
 
-  socket.on('room', room => {
-    socket.join(room)
-    console.log('join room===>', room)
+  let room
+  if (user.role==='Internal') room = 'internalRoom'
+  else room = `room${user.id}`
+  socket.join(room)
+  console.log(`User ${user.firstName} joins room`, room)
+
+  socket.on('room', room => {  //Not needed for now but maybe later
+   socket.join(room)
   })
 
-  socket.on('leave', room => {
+  socket.on('leave', room => { //Not needed for now but maybe later
     socket.leave(room)
-    console.log('Leave room===>', room)
   })
+
   socket.on('disconnect', () => {
-    console.log(`User ${name} just disconnected`)
-    socket.on('room', room => {
-      socket.leave(room)
-    })
+    socket.leave(room)
+    console.log(`User ${user.firstName} just disconnected`)
   })
 })
-
-const room = 'MyRoom'
-io.in(room).emit('message', 'What is going on')
 
 setupDb()
   .then(_ => {
