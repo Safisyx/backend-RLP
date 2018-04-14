@@ -5,6 +5,7 @@ import {
 import {Order} from '../entities/order'
 import {Address} from '../entities/address'
 import {Delivery} from '../entities/delivery'
+import {User} from '../entities/user'
 
 @JsonController()
 export default class OrderController {
@@ -14,12 +15,17 @@ export default class OrderController {
   @HttpCode(201)
   async createOrders(
     @Body() {order, addresses},
+    @CurrentUser() {id,role}
   ) {
+    if (role!=='External') throw new BadRequestError('Only client can create order')
+
+    const user = await User.findOneById(id)
+    if (!user) throw new NotFoundError('User not found')
 
     const date = order.orderDate || new Date()
 
     const delivery = await Delivery.findOneById(order.deliveryId)
-    const entity =  await Order.create({...order, orderDate:date, delivery}).save()
+    const entity =  await Order.create({...order, orderDate:date, delivery, user}).save()
 
 
     for(let i=0;i<addresses.length;i++){
