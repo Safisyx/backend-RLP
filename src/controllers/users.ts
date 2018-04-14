@@ -1,7 +1,6 @@
 import { JsonController, Post, Param, Get, Patch, NotFoundError, Body, Delete, Authorized, CurrentUser, BadRequestError } from 'routing-controllers'
 import {User} from '../entities/user';
 import { sign, signup, verifySignup } from '../jwt'
-import {io} from '../index'
 
 @JsonController()
 export default class UserController {
@@ -89,24 +88,16 @@ export default class UserController {
   }
 
 
-    @Authorized()
-    @Delete('/users/:id([0-9]+)')
-    async removeUser(
-    @Param('id') id: number,
-    @CurrentUser() currentUser,
-    )  {
-      if (currentUser.role !=='Internal') throw new BadRequestError('Cannot delete other users')
-      const user = await User.findOneById(id)
-      if (!user) throw new NotFoundError('Cannot find user')
-      user.remove()
-      return "user succesfully deleted"
-    }
-
-    @Post('/tests')
-    async test(
-    @Body() {message,room}
-    ){
-    io.to(room).emit('message',message)
-    return 'sssh'
-    }
+  @Authorized()
+  @Delete('/users/:id([0-9]+)')
+  async removeUser(
+  @Param('id') id: number,
+  @CurrentUser() currentUser,
+  )  {
+    if (currentUser.role !=='Internal') throw new BadRequestError('Cannot delete other users')
+    const user = await User.findOneById(id)
+    if (!user) throw new NotFoundError('Cannot find user')
+    user.remove()
+    return "user succesfully deleted"
   }
+}
