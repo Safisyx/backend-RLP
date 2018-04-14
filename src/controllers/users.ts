@@ -21,7 +21,7 @@ export default class UserController {
     await user.save()
     if (!await user.checkPassword(password)) throw new BadRequestError('The password is not correct')
     const jwt = sign({ id: user.id!, role: user.role! })
-    return { jwt }
+    return { jwt, id: user.id}
   }
 
   @Authorized()
@@ -67,8 +67,9 @@ export default class UserController {
     if (role !== 'Internal') throw new BadRequestError('Cannot create user')
     const {password, ...rest} = user
     const userToSend = await User.create(rest).save()
+    const userRole=(!userToSend.role)? 'External': userToSend.role
     return {
-      jwt:signup({ id: userToSend.id!, role: userToSend.role!, email: userToSend.email! })
+      jwt:signup({ id: userToSend.id!, role: userRole, email: userToSend.email! })
     }
   }
 
@@ -87,16 +88,16 @@ export default class UserController {
   }
 
 
-    @Authorized()
-    @Delete('/users/:id([0-9]+)')
-    async removeUser(
-    @Param('id') id: number,
-    @CurrentUser() currentUser,
-    )  {
-      if (currentUser.role !=='Internal') throw new BadRequestError('Cannot delete other users')
-      const user = await User.findOneById(id)
-      if (!user) throw new NotFoundError('Cannot find user')
-      user.remove()
-      return "user succesfully deleted"
-    }
+  @Authorized()
+  @Delete('/users/:id([0-9]+)')
+  async removeUser(
+  @Param('id') id: number,
+  @CurrentUser() currentUser,
+  )  {
+    if (currentUser.role !=='Internal') throw new BadRequestError('Cannot delete other users')
+    const user = await User.findOneById(id)
+    if (!user) throw new NotFoundError('Cannot find user')
+    user.remove()
+    return "user succesfully deleted"
   }
+}
