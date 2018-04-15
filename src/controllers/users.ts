@@ -27,9 +27,21 @@ export default class UserController {
   @Authorized()
   @Get('/users/:id([0-9]+)')
   getUser(
-    @Param('id') id: number
+    @Param('id') id: number,
+    @CurrentUser() {role}
   ) {
+    if (role!=='Internal') throw new BadRequestError('You are not allowed to get this info')
     return User.findOneById(id)
+  }
+
+  @Authorized()
+  @Get('/users/currentUser')
+  async getCurrentUser(
+    @CurrentUser() currentUser
+  ){
+    const user = await User.findOneById(currentUser.id)
+    if (!user) throw new NotFoundError('User not found')
+    return user
   }
 
   @Authorized()
