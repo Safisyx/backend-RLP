@@ -16,6 +16,7 @@ import LoginController from './controllers/login'
 import UserController from './controllers/users'
 import MessageController from './controllers/message'
 import {User} from './entities/user'
+import CompanyController from './controllers/company'
 
 const app = new Koa()
 const server = new Server(app.callback())
@@ -29,7 +30,8 @@ useKoaServer(app, {
     DeliveryController,
     LoginController,
     UserController,
-    MessageController
+    MessageController,
+    CompanyController
   ],
   authorizationChecker: (action: Action) => {
   const header: string = action.request.headers.authorization;

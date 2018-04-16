@@ -5,6 +5,7 @@ import {User} from './user'
 import {Address} from './address'
 import {Message} from './message'
 import {Photo} from './photo'
+import {Company} from './company'
 
 @Entity()
 export class Order extends BaseEntity {
@@ -71,5 +72,11 @@ export class Order extends BaseEntity {
 
   @OneToMany(_=> Photo, photos => photos.order, {eager: true})
   photos: Photo[]
+
+  @ManyToOne(_ => Company, company => company.orders)
+  company: Company
+
+  @RelationId((order: Order)=> order.company)
+  companyId: number
 
 }
