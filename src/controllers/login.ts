@@ -21,6 +21,7 @@ export default class LoginController {
   async authenticate(
     @Body() { email, password }: AuthenticatePayload
   ) {
+    if(password === "") throw new BadRequestError('ERROR')
     const user = await User.findOne({ where: { email } })
     if (!user) throw new BadRequestError('A user with this email does not exist')
 
