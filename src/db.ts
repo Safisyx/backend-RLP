@@ -8,6 +8,7 @@ import {User} from './entities/user'
 import {Address} from './entities/address'
 import {Message} from './entities/message'
 import {Photo} from './entities/photo'
+import {Company} from './entities/company'
 
 class CustomNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
 
@@ -38,7 +39,8 @@ export default () =>
       User,
       Address,
       Message,
-      Photo
+      Photo,
+      Company
     ],
     synchronize: true,
     logging: true,

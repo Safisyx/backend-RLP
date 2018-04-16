@@ -1,5 +1,6 @@
 import { JsonController, Post, Param, Get, Patch, NotFoundError, Body, Delete, Authorized, CurrentUser, BadRequestError } from 'routing-controllers'
 import {User} from '../entities/user';
+import {Company} from '../entities/company'
 import { sign, signup, verifySignup } from '../jwt'
 
 @JsonController()
@@ -70,15 +71,18 @@ export default class UserController {
   }
 
   @Authorized()
-  @Post('/users')
+  @Post('/users/company/:companyId')
   async createUser(
     @CurrentUser() { role },
+    @Param('companyId') companyId: number,
     @Body() user
   ) {
 
     if (role !== 'Internal') throw new BadRequestError('Cannot create user')
-    const {password, ...rest} = user
-    const userToSend = await User.create(rest).save()
+    const {password,companyName, ...rest} = user
+    const company = await Company.findOneById(companyId)
+    if(!company) throw new NotFoundError('Company not found')
+    const userToSend = await User.create({...rest, company, companyName: company.companyName}).save()
     const userRole=(!userToSend.role)? 'External': userToSend.role
     return {
       jwt:signup({ id: userToSend.id!, role: userRole, email: userToSend.email! })
