@@ -33,6 +33,10 @@ export class Order extends BaseEntity {
   @Column('date', {nullable:true})
   deliveryDate: Date
 
+  @IsInt()
+  @Column('integer', {nullable:false})
+  orderNumber: number
+
   @IsString()
   @MinLength(1)
   @Column('text', {nullable:true})

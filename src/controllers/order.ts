@@ -57,4 +57,21 @@ export default class OrderController {
     if (!order) throw new NotFoundError('No such order')
     return order
   }
+
+  @Authorized()
+  @Get('/orders/orderNumber/newNumber')
+  async getNewNumber(
+  ){
+    const orders = await Order.find()
+    if (orders.length===0) return new NotFoundError('No orders yet')
+    const sorted = orders.sort((a,b)=>{
+      console.log(typeof(a.orderNumber))
+      if (a.orderNumber>b.orderNumber)
+        return 1
+      return -1
+    })
+    return {
+      orderNumber: sorted[sorted.length-1].orderNumber+1
+    }
+  }
 }
