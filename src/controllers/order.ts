@@ -61,13 +61,27 @@ export default class OrderController {
     return order
   }
 
-   @Get("/files")
-    getFile(@UploadedFile("fileName") file: any) {
-      return Photo.find()
+
+  @Authorized()
+  @Get('/orders/orderNumber/newNumber')
+  async getNewNumber(
+  ){
+    const orders = await Order.find()
+    if (orders.length===0) return new NotFoundError('No orders yet')
+    const sorted = orders.sort((a,b)=>{
+      console.log(typeof(a.orderNumber))
+      if (a.orderNumber>b.orderNumber)
+        return 1
+      return -1
+    })
+    return {
+      orderNumber: sorted[sorted.length-1].orderNumber+1
     }
+  }
+
+  @Get("/files")
+   getFile(@UploadedFile("fileName") file: any) {
+     return Photo.find()
+   }
 
 }
-
-// include photo in order entity
-// also look at sendgrid/mail
-// @types/koa-multer

@@ -6,7 +6,6 @@ import {Delivery} from './entities/delivery'
 import {Order} from './entities/order'
 import {User} from './entities/user'
 import {Address} from './entities/address'
-//import {Channel} from './entities/channel'
 import {Message} from './entities/message'
 import {Photo} from './entities/photo'
 
