@@ -1,11 +1,13 @@
 import {
   JsonController, Authorized, CurrentUser, Post, Param, HttpCode, NotFoundError, BadRequestError, Get,
-  Body
+  Body, UploadedFile
 } from 'routing-controllers'
 import {Order} from '../entities/order'
 import {Address} from '../entities/address'
 import {Delivery} from '../entities/delivery'
 import {User} from '../entities/user'
+import {Photo} from '../entities/photo'
+import {fileUploadOptions} from '../fileUploadConfig'
 
 @JsonController()
 export default class OrderController {
@@ -15,8 +17,9 @@ export default class OrderController {
   @HttpCode(201)
   async createOrders(
     @Body() {order, addresses},
-    @CurrentUser() {id,role}
-  ) {
+    @CurrentUser() {id,role},
+    ) {
+
     if (role!=='External') throw new BadRequestError('Only client can create order')
 
     const user = await User.findOneById(id)
@@ -57,4 +60,14 @@ export default class OrderController {
     if (!order) throw new NotFoundError('No such order')
     return order
   }
+
+   @Get("/files")
+    getFile(@UploadedFile("fileName") file: any) {
+      return Photo.find()
+    }
+
 }
+
+// include photo in order entity
+// also look at sendgrid/mail
+// @types/koa-multer

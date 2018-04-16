@@ -1,4 +1,4 @@
-import { JsonController, Post, Get, Body, BadRequestError, Authorized, CurrentUser, Param, NotFoundError } from 'routing-controllers'
+import { JsonController, Post, Body, BadRequestError, Authorized, CurrentUser, Param, NotFoundError } from 'routing-controllers'
 import {User} from '../entities/user'
 import {Order} from '../entities/order'
 import {Message} from '../entities/message'
