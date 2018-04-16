@@ -7,6 +7,7 @@ import {Address} from '../entities/address'
 import {Delivery} from '../entities/delivery'
 import {User} from '../entities/user'
 import {Photo} from '../entities/photo'
+import {Company} from '../entities/company'
 import {fileUploadOptions} from '../fileUploadConfig'
 
 @JsonController()
@@ -25,10 +26,13 @@ export default class OrderController {
     const user = await User.findOneById(id)
     if (!user) throw new NotFoundError('User not found')
 
+    const company = await Company.findOneById(user.companyId)
+    if (user) throw new NotFoundError('Company not found')
+
     const date = order.orderDate || new Date()
 
     const delivery = await Delivery.findOneById(order.deliveryId)
-    const entity =  await Order.create({...order, orderDate:date, delivery, user}).save()
+    const entity =  await Order.create({...order, orderDate:date, delivery, user, company}).save()
 
 
     for(let i=0;i<addresses.length;i++){
