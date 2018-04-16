@@ -33,4 +33,14 @@ export default class CompanyController {
     if (!order) throw new NotFoundError('No such order')
     return order
   }
+  
+  @Authorized()
+  @Post('/companies')
+  async addCompany(
+    @Body() company,
+    @CurrentUser() {role}
+  ){
+    if (role!=='Internal') throw new BadRequestError('Not allowed to create a company')
+    return await Company.create(company).save()
+  }
 }
