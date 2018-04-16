@@ -4,6 +4,7 @@ import {Delivery} from './delivery'
 import {User} from './user'
 import {Address} from './address'
 import {Message} from './message'
+import {Photo} from './photo'
 
 @Entity()
 export class Order extends BaseEntity {
@@ -67,4 +68,8 @@ export class Order extends BaseEntity {
 
   @OneToMany(_=> Message, message => message.order, {eager: true})
   messages: Message[]
+
+  @OneToMany(_=> Photo, photos => photos.order, {eager: true})
+  photos: Photo[]
+
 }

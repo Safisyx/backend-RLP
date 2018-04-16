@@ -7,6 +7,7 @@ import {Order} from './entities/order'
 import {User} from './entities/user'
 import {Address} from './entities/address'
 import {Message} from './entities/message'
+import {Photo} from './entities/photo'
 
 class CustomNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
 
@@ -36,7 +37,8 @@ export default () =>
       Delivery,
       User,
       Address,
-      Message
+      Message,
+      Photo
     ],
     synchronize: true,
     logging: true,
