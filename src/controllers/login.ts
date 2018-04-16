@@ -28,6 +28,6 @@ export default class LoginController {
     if (!await user.checkPassword(password)) throw new BadRequestError('The password is not correct')
 
     const jwt = sign({ id: user.id!, role: user.role! })
-    return { jwt }
+    return { jwt, id: user.id }
   }
 }

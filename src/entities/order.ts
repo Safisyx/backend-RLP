@@ -1,10 +1,9 @@
-import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, ManyToOne, RelationId, OneToMany,
-  OneToOne, JoinColumn } from 'typeorm'
-import {IsInt, IsString, Min, MinLength, IsDate} from 'class-validator'
+import { BaseEntity, PrimaryGeneratedColumn, Column, Entity, ManyToOne, RelationId, OneToMany} from 'typeorm'
+import {IsInt, IsString, Min, MinLength, IsDate, IsBoolean} from 'class-validator'
 import {Delivery} from './delivery'
 import {User} from './user'
 import {Address} from './address'
-import {Channel} from './channel'
+import {Message} from './message'
 
 @Entity()
 export class Order extends BaseEntity {
@@ -39,6 +38,14 @@ export class Order extends BaseEntity {
   @Column('text', {nullable:true})
   paymentType: string
 
+  @IsBoolean()
+  @Column('boolean', {default: false})
+  archived: boolean
+
+  @IsBoolean()
+  @Column('boolean', {default: false})
+  locked: boolean
+
   @ManyToOne(_ => Delivery, delivery => delivery.orders)
   delivery: Delivery
 
@@ -54,7 +61,6 @@ export class Order extends BaseEntity {
   @OneToMany(_ => Address, addresses => addresses.order, {eager: true})
   addresses: Address[]
 
-  // @OneToOne(_=> Channel, channel => channel.order, {eager: true})
-  // @JoinColumn()
-  // channel: Channel
+  @OneToMany(_=> Message, message => message.order, {eager: true})
+  messages: Message[]
 }
