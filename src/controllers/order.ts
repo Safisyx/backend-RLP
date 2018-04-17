@@ -52,7 +52,8 @@ export default class OrderController {
     @CurrentUser() {id,role}
   ){
     if (role==='Internal') return await Order.find()
-    return await Order.find({where:{userId:id}})
+    const user =await User.findOneById(id)
+    return await Order.find({where:{user:user}})
   }
 
   @Authorized()
