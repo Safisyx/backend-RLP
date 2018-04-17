@@ -79,4 +79,6 @@ export class Order extends BaseEntity {
   @RelationId((order: Order)=> order.company)
   companyId: number
 
+  @Column('text', {nullable: false})
+  userEmail: string;
 }
