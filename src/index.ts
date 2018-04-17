@@ -15,8 +15,11 @@ import DeliveryController from './controllers/delivery'
 import LoginController from './controllers/login'
 import UserController from './controllers/users'
 import MessageController from './controllers/message'
+import PhotoController from './controllers/photo'
 import {User} from './entities/user'
 import CompanyController from './controllers/company'
+
+import * as serve from 'koa-static'
 
 const app = new Koa()
 const server = new Server(app.callback())
@@ -31,7 +34,8 @@ useKoaServer(app, {
     LoginController,
     UserController,
     MessageController,
-    CompanyController
+    CompanyController,
+    PhotoController,
   ],
   authorizationChecker: (action: Action) => {
   const header: string = action.request.headers.authorization;
@@ -91,6 +95,7 @@ io.on('connect', socket => {
   })
 })
 
+app.use(serve('./public'))
 
 setupDb()
   .then(_ => {
