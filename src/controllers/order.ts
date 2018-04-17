@@ -27,12 +27,14 @@ export default class OrderController {
     if (!user) throw new NotFoundError('User not found')
 
     const company = await Company.findOneById(user.companyId)
-    if (user) throw new NotFoundError('Company not found')
+    if (!company) throw new NotFoundError('Company not found')
+
+    const userEmail = user.email
 
     const date = order.orderDate || new Date()
 
     const delivery = await Delivery.findOneById(order.deliveryId)
-    const entity =  await Order.create({...order, orderDate:date, delivery, user, company}).save()
+    const entity =  await Order.create({...order, orderDate:date, delivery, user, company, userEmail}).save()
 
 
     for(let i=0;i<addresses.length;i++){
