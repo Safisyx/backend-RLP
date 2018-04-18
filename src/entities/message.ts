@@ -33,4 +33,9 @@ export class Message extends BaseEntity {
   @RelationId((message: Message)=> message.order)
   orderId: number
 
+  @IsString()
+  @Column('text', {nullable: true})
+  userName: string
+
+
 }
