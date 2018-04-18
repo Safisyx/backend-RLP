@@ -8,7 +8,8 @@ import {Delivery} from '../entities/delivery'
 import {User} from '../entities/user'
 import {Photo} from '../entities/photo'
 import {Company} from '../entities/company'
-import {fileUploadOptions} from '../fileUploadConfig'
+import {FILE_UPLOAD_OPTIONS} from '../fileUploadConfig'
+const baseUrl = process.env.BASE_URL || 'http://localhost:4001'
 
 @JsonController()
 export default class OrderController {
@@ -19,6 +20,7 @@ export default class OrderController {
   async createOrders(
     @Body() {order, addresses},
     @CurrentUser() {id,role},
+    @UploadedFile('photo', {options: FILE_UPLOAD_OPTIONS}) file: any
     ) {
 
     if (role!=='External') throw new BadRequestError('Only client can create order')
@@ -34,11 +36,18 @@ export default class OrderController {
     const date = order.orderDate || new Date()
 
     const delivery = await Delivery.findOneById(order.deliveryId)
+
     const entity =  await Order.create({...order, orderDate:date, delivery, user, company, userEmail}).save()
 
 
     for(let i=0;i<addresses.length;i++){
        await Address.create({...addresses[i],order:entity}).save()
+    }
+    if (file && !file.path.match(/\.(jpg|jpeg|png|gif)$/)){
+      await Photo.create({
+        link: baseUrl + file.path.substring(6, file.path.length),
+        order:entity
+      }).save()
     }
 
     const orderToSend = await Order.findOneById(entity.id)
@@ -53,7 +62,9 @@ export default class OrderController {
   ){
     if (role==='Internal') return await Order.find()
     const user =await User.findOneById(id)
-    return await Order.find({where:{user:user}})
+    if(!user) throw new NotFoundError('User not found')
+    const company = await Company.findOneById(user.companyId)
+    return await Order.find({where:{company:company}})
   }
 
   @Authorized()
@@ -85,10 +96,4 @@ export default class OrderController {
       orderNumber: sorted[sorted.length-1].orderNumber+1
     }
   }
-
-  @Get("/files")
-   getFile(@UploadedFile("fileName") file: any) {
-     return Photo.find()
-   }
-
 }
