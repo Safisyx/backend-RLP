@@ -21,15 +21,16 @@ export default class MessageController {
     if (!user) throw new NotFoundError('User not found')
     if (role!=='Internal' && id!==user.id) throw new BadRequestError('Not allowed')
 
-    await Message.create({content:message, order, user}).save()
+    await Message.create({content:message, order, user, userName:user.firstName}).save()
     const updatedOrder = await Order.findOneById(orderId)
+    if (!updatedOrder) throw new NotFoundError('ERROR')
 
     const action = {
       type:'ADD_MESSAGE',
       payload: updatedOrder
     }
     io.to('internalRoom').emit('action', action)
-    io.to(`room${user.id}`).emit('action', action)
+    io.to(`room${updatedOrder.userId}`).emit('action', action)
 
     return action.payload
   }
