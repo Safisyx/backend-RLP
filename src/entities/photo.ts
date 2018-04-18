@@ -11,7 +11,7 @@ export class Photo extends BaseEntity {
   @IsString()
   @MinLength(2)
   @Column('text')
-  Description: string
+  link: string
 
   @ManyToOne(_ => Order, order => order.photos)
   order: Order
