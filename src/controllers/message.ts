@@ -1,4 +1,4 @@
-import { JsonController, Post, Get, Body, BadRequestError, Authorized, CurrentUser, Param, NotFoundError } from 'routing-controllers'
+import { JsonController, Post, Body, BadRequestError, Authorized, CurrentUser, Param, NotFoundError } from 'routing-controllers'
 import {User} from '../entities/user'
 import {Order} from '../entities/order'
 import {Message} from '../entities/message'
@@ -21,10 +21,12 @@ export default class MessageController {
     if (!user) throw new NotFoundError('User not found')
     if (role!=='Internal' && id!==user.id) throw new BadRequestError('Not allowed')
 
-    const newMsg = await Message.create({content:message, order, user}).save()
+    await Message.create({content:message, order, user}).save()
+    const updatedOrder = await Order.findOneById(orderId)
+
     const action = {
       type:'ADD_MESSAGE',
-      payload: newMsg
+      payload: updatedOrder
     }
     io.to('internalRoom').emit('action', action)
     io.to(`room${user.id}`).emit('action', action)

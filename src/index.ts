@@ -15,7 +15,11 @@ import DeliveryController from './controllers/delivery'
 import LoginController from './controllers/login'
 import UserController from './controllers/users'
 import MessageController from './controllers/message'
+import PhotoController from './controllers/photo'
 import {User} from './entities/user'
+import CompanyController from './controllers/company'
+
+import * as serve from 'koa-static'
 
 const app = new Koa()
 const server = new Server(app.callback())
@@ -29,7 +33,9 @@ useKoaServer(app, {
     DeliveryController,
     LoginController,
     UserController,
-    MessageController
+    MessageController,
+    CompanyController,
+    PhotoController,
   ],
   authorizationChecker: (action: Action) => {
   const header: string = action.request.headers.authorization;
@@ -88,6 +94,8 @@ io.on('connect', socket => {
     console.log(`User ${user.firstName} just disconnected`)
   })
 })
+
+app.use(serve('./public'))
 
 setupDb()
   .then(_ => {

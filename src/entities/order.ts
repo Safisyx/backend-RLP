@@ -4,6 +4,8 @@ import {Delivery} from './delivery'
 import {User} from './user'
 import {Address} from './address'
 import {Message} from './message'
+import {Photo} from './photo'
+import {Company} from './company'
 
 @Entity()
 export class Order extends BaseEntity {
@@ -32,6 +34,10 @@ export class Order extends BaseEntity {
   @IsDate()
   @Column('date', {nullable:true})
   deliveryDate: Date
+
+  @IsInt()
+  @Column('integer', {nullable:false})
+  orderNumber: number
 
   @IsString()
   @MinLength(1)
@@ -63,4 +69,16 @@ export class Order extends BaseEntity {
 
   @OneToMany(_=> Message, message => message.order, {eager: true})
   messages: Message[]
+
+  @OneToMany(_=> Photo, photos => photos.order, {eager: true})
+  photos: Photo[]
+
+  @ManyToOne(_ => Company, company => company.orders)
+  company: Company
+
+  @RelationId((order: Order)=> order.company)
+  companyId: number
+
+  @Column('text', {nullable: true})
+  userEmail: string;
 }

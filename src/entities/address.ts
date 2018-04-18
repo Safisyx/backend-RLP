@@ -27,6 +27,9 @@ export class Address extends BaseEntity {
   telephoneNumber: string;
 
   @Column('text', { nullable: true })
+  email: string;
+
+  @Column('text', { nullable: true })
   contactPerson: string;
 
   @ManyToOne(_ => Order, order => order.addresses)

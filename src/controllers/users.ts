@@ -1,6 +1,8 @@
 import { JsonController, Post, Param, Get, Patch, NotFoundError, Body, Delete, Authorized, CurrentUser, BadRequestError } from 'routing-controllers'
 import {User} from '../entities/user';
+import {Company} from '../entities/company'
 import { sign, signup, verifySignup } from '../jwt'
+import {sendSignUpMail, sendForgotPasswordMail} from '../mail/template'
 
 @JsonController()
 export default class UserController {
@@ -70,33 +72,47 @@ export default class UserController {
   }
 
   @Authorized()
-  @Post('/users')
+  @Post('/users/company/:companyId')
   async createUser(
     @CurrentUser() { role },
+    @Param('companyId') companyId: number,
     @Body() user
   ) {
 
     if (role !== 'Internal') throw new BadRequestError('Cannot create user')
-    const {password, ...rest} = user
-    const userToSend = await User.create(rest).save()
+    const {password,companyName, ...rest} = user
+    const company = await Company.findOneById(companyId)
+    if(!company) throw new NotFoundError('Company not found')
+    const userToSend = await User.create({...rest, company, companyName: company.companyName}).save()
     const userRole=(!userToSend.role)? 'External': userToSend.role
-    return {
-      jwt:signup({ id: userToSend.id!, role: userRole, email: userToSend.email! })
+    const jwt=signup({ id: userToSend.id!, role: userRole, email: userToSend.email! })
+
+    try {
+      await sendSignUpMail(userToSend.email, jwt)
+    } catch(err) {
+      return { message: err.message }
     }
+
+    return { message: 'Successfully sent signup link.' }
   }
 
-  @Authorized()
-  @Get('/jwt/:email')
-  async getJwt(
-    @Param('email') email: string,
-    @CurrentUser() {role}
+
+  @Post('/forgotPassword')
+  async sendPasswordReset(
+    @Body() {email}
   ){
-    if (role !== 'Internal') throw new BadRequestError('You cannot do that')
     const user = await User.findOne({where:{email}})
     if (!user) throw new NotFoundError('User not found')
-    return {
-      jwt:signup({ id: user.id!, role: user.role!, email: user.email! })
+
+    const jwt =signup({ id: user.id!, role: user.role!, email: user.email! })
+
+    try {
+      await sendForgotPasswordMail(email, jwt)
+    } catch(err) {
+      return { message: err.message }
     }
+
+    return { message: 'Successfully sent password reset link.' }
   }
 
 
