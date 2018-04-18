@@ -33,7 +33,7 @@ export default class CompanyController {
     if (!order) throw new NotFoundError('No such order')
     return order
   }
-  
+
   @Authorized()
   @Post('/companies')
   async addCompany(
