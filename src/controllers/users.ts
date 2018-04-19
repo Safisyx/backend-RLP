@@ -17,11 +17,11 @@ export default class UserController {
     console.log(id,role,email)
     if (!id || !role || !email) throw new BadRequestError('ERROR ERROR ERROR')
     const user = await User.findOneById(id)
-    if (!user) throw new NotFoundError('Cannot find user')
+    if (!user) throw new NotFoundError('Deze gebruiker bestaat niet')
     console.log(password)
     await user.setPassword(password)
     await user.save()
-    if (!await user.checkPassword(password)) throw new BadRequestError('The password is not correct')
+    if (!await user.checkPassword(password)) throw new BadRequestError('Het wachtwoord is niet geldig')
     const jwt = sign({ id: user.id!, role: user.role! })
     return { jwt, id: user.id}
   }
@@ -93,7 +93,7 @@ export default class UserController {
       return { message: err.message }
     }
 
-    return { message: 'Successfully sent signup link.' }
+    return { message: 'U hebt een signup mail verstuurd.' }
   }
 
 
