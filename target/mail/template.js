@@ -5,7 +5,7 @@ const mailApiKey_1 = require("../mailApiKey");
 sgMail.setApiKey(mailApiKey_1.MY_SENDGRID_KEY);
 const sender = 'flexicon@example.com';
 exports.sendSignUpMail = (email, token) => {
-    const baseUrl = 'https://gentle-crag-71071.herokuapp.com';
+    const baseUrl = 'https://gentle-crag-71071.herokuapp.com/signup/';
     const msg = {
         to: email,
         from: sender,
@@ -29,7 +29,7 @@ exports.sendSignUpMail = (email, token) => {
     return sgMail.send(msg);
 };
 exports.sendForgotPasswordMail = (email, token) => {
-    const baseUrl = 'https://gentle-crag-71071.herokuapp.com';
+    const baseUrl = 'https://gentle-crag-71071.herokuapp.com/wachtwoordvergeten/';
     const msg = {
         to: email,
         from: sender,
