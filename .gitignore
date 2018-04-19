@@ -1,6 +1,5 @@
 node_modules
 .idea
-target
 yarn-error.log
 src/mailApiKey.ts
 public/uploads/*
