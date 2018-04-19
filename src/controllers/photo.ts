@@ -6,7 +6,7 @@ import {User} from '../entities/user'
 import {io} from '../index'
 import {FILE_UPLOAD_OPTIONS} from '../fileUploadConfig'
 
-const baseUrl = process.env.BASE_URL || 'http://localhost:4001'
+const baseUrl = process.env.SERVER_URL || 'http://localhost:4001'
 
 
 @JsonController()

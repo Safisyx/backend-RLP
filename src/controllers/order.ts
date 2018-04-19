@@ -9,7 +9,7 @@ import {User} from '../entities/user'
 import {Photo} from '../entities/photo'
 import {Company} from '../entities/company'
 import {FILE_UPLOAD_OPTIONS} from '../fileUploadConfig'
-const baseUrl = process.env.BASE_URL || 'http://localhost:4001'
+const baseUrl = process.env.SERVER_URL || 'http://localhost:4001'
 
 @JsonController()
 export default class OrderController {

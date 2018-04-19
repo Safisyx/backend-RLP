@@ -18,7 +18,7 @@ const photo_1 = require("../entities/photo");
 const user_1 = require("../entities/user");
 const index_1 = require("../index");
 const fileUploadConfig_1 = require("../fileUploadConfig");
-const baseUrl = process.env.BASE_URL || 'http://localhost:4001';
+const baseUrl = process.env.SERVER_URL || 'http://localhost:4001';
 let PhotoController = class PhotoController {
     async addPhoto(orderId, { id, role }, file) {
         if (!file.path.match(/\.(jpg|jpeg|png|gif)$/))

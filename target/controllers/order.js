@@ -20,7 +20,7 @@ const user_1 = require("../entities/user");
 const photo_1 = require("../entities/photo");
 const company_1 = require("../entities/company");
 const fileUploadConfig_1 = require("../fileUploadConfig");
-const baseUrl = process.env.BASE_URL || 'http://localhost:4001';
+const baseUrl = process.env.SERVER_URL || 'http://localhost:4001';
 let OrderController = class OrderController {
     async createOrders(body, { id, role }, file) {
         const order = JSON.parse(body.order);
