@@ -99,4 +99,17 @@ export default class OrderController {
       orderNumber: sorted[sorted.length-1].orderNumber+1
     }
   }
+
+  @Authorized()
+  async editOrder(
+    @Param('id') id: number,
+    @CurrentUser() currentUser,
+    @Body() body
+  ){
+    if (currentUser.role!=='Internal') throw new BadRequestError('You are not allowed to do that')
+    const order = await Order.findOneById(id)
+    if (!order) throw new NotFoundError('No such order')
+    await Order.merge(order, body).save()
+    return order
+  }
 }
