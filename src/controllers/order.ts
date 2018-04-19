@@ -18,11 +18,12 @@ export default class OrderController {
   @Post('/orders')
   @HttpCode(201)
   async createOrders(
-    @Body() {order, addresses},
+    @Body() body,
     @CurrentUser() {id,role},
     @UploadedFile('photo', {options: FILE_UPLOAD_OPTIONS}) file: any
     ) {
-
+    const order = JSON.parse(body.order)
+    const addresses = JSON.parse(body.addresses)
     if (role!=='External') throw new BadRequestError('Only client can create order')
 
     const user = await User.findOneById(id)
@@ -32,7 +33,6 @@ export default class OrderController {
     if (!company) throw new NotFoundError('Company not found')
 
     const userEmail = user.email
-
     const date = order.orderDate || new Date()
 
     const delivery = await Delivery.findOneById(order.deliveryId)
@@ -43,7 +43,8 @@ export default class OrderController {
     for(let i=0;i<addresses.length;i++){
        await Address.create({...addresses[i],order:entity}).save()
     }
-    if (file && !file.path.match(/\.(jpg|jpeg|png|gif)$/)){
+    console.log(file?true:false)
+    if (file){
       await Photo.create({
         link: baseUrl + file.path.substring(6, file.path.length),
         order:entity
@@ -85,7 +86,9 @@ export default class OrderController {
   async getNewNumber(
   ){
     const orders = await Order.find()
-    if (orders.length===0) return new NotFoundError('No orders yet')
+    if (orders.length===0) return {
+      orderNumber: 10001
+    }
     const sorted = orders.sort((a,b)=>{
       console.log(typeof(a.orderNumber))
       if (a.orderNumber>b.orderNumber)
