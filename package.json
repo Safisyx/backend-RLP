@@ -34,5 +34,8 @@
     "dev": "nodemon .",
     "compile": "tsc -p .",
     "seed": "node target/seeds.js"
-  }
+  },
+  "production": {
+  "use_env_variable": "DATABASE_URL"
+}
 }
