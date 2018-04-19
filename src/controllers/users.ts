@@ -93,7 +93,8 @@ export default class UserController {
       return { message: err.message }
     }
 
-    return { message: 'U hebt een signup mail verstuurd.' }
+    return await Company.findOneById(companyId)
+
   }
 
 
