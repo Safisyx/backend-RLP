@@ -28,9 +28,9 @@ export default class CompanyController {
     @Param('id') id: number,
     @CurrentUser() currentUser
   ){
-    if (currentUser.id!==id) throw new BadRequestError('You are not allowed to view that')
+    if (currentUser.id!==id) throw new BadRequestError('U bent niet geautoriseerd om deze pagina te bekijken')
     const order = await Order.findOneById(id)
-    if (!order) throw new NotFoundError('No such order')
+    if (!order) throw new NotFoundError('Bestelling bestaat niet')
     return order
   }
 
@@ -40,7 +40,7 @@ export default class CompanyController {
     @Body() company,
     @CurrentUser() {role}
   ){
-    if (role!=='Internal') throw new BadRequestError('Not allowed to create a company')
+    if (role!=='Internal') throw new BadRequestError('U bent niet geautoriseerd om een bedrijf toe te voegen')
     const ncompany = await Company.create(company).save()
     return await Company.findOneById(ncompany.id)
   }
