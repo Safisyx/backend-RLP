@@ -23,9 +23,9 @@ export default class LoginController {
   ) {
     if(password === "") throw new BadRequestError('ERROR')
     const user = await User.findOne({ where: { email } })
-    if (!user) throw new BadRequestError('A user with this email does not exist')
+    if (!user) throw new BadRequestError('Een gebruiker met deze e-mail bestaat niet')
 
-    if (!await user.checkPassword(password)) throw new BadRequestError('The password is not correct')
+    if (!await user.checkPassword(password)) throw new BadRequestError('Het wachtwoord is niet geldig')
 
     const jwt = sign({ id: user.id!, role: user.role! })
     return { jwt, id: user.id }

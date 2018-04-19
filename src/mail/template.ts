@@ -10,21 +10,21 @@ export const sendSignUpMail = (email: string, token:string) => {
   const msg = {
     to: email,
     from: sender,
-    subject: 'Setup your password for Flexicon',
-    text: `Hello,\n
+    subject: 'Uitnodiging voor Flexicon',
+    text: `Hallo,\n
              \n
-             Thank you for choosing Flexicon.\n
+             Namens Flexicon ontvang je een uitnodiging voor de Flexicon Klanten Order Admin tool.\n
              \n
-             An account has been set for you.\n
-             Please go to the following link to create your password
+             Wij hebben nu al een account voor je angemaakt.\n
+             Als je op onderstaande link klikt zul je gevraagd worden een wachtwoord voor je account aan te maken.
              \n
              ${baseUrl + token}`,
-    html: `Hello,\n
+    html: `Hallo,\n
              \n
-             Thank you for choosing Flexicon.\n
+             Namens Flexicon ontvang je een uitnodiging voor de Flexicon Klanten Order Admin tool.\n
              \n
-             An account has been set for you.\n
-             Please go to the following link to create your password\n
+             Wij hebben nu al een account voor je angemaakt.\n
+             Als je op onderstaande link klikt zul je gevraagd worden een wachtwoord voor je account aan te maken.
              <a href="${baseUrl + token}">${baseUrl + token}</a>`,
   }
 
@@ -36,17 +36,17 @@ export const sendForgotPasswordMail = (email: string, token:string) => {
   const msg = {
     to: email,
     from: sender,
-    subject: 'Reset your password for your account Flexicon',
-    text: `Hello,\n
+    subject: 'Wachtwoord opnieuw instellen voor Flexicon account',
+    text: `Hallo,\n
              \n
-             You asked for a new password.\n
-             Please go to the following link to create a new password
+             Je hebt een nieuwe wachtwoord voor je Flexicon account angevraagd.\n
+             Klik alsjeblieft op onderstaande link om een nieuwe wachtwoord an te maken.
              \n
              ${baseUrl + token}`,
-    html: `Hello,\n
+    html: `Hallo,\n
             \n
-            You asked for a new password.\n
-            Please go to the following link to create a new password
+            Je hebt een nieuwe wachtwoord voor je Flexicon account angevraagd.\n
+            Klik alsjeblieft op onderstaande link om een nieuwe wachtwoord an te maken.
             \n
              <a href="${baseUrl + token}">${baseUrl + token}</a>`,
   }
