@@ -1,15 +1,13 @@
 import * as sgMail from '@sendgrid/mail'
-import {MY_SENDGRID_KEY} from "../mailApiKey";
-
-sgMail.setApiKey(MY_SENDGRID_KEY)
-
-const sender = 'flexicon@example.com'
+import {SENDGRID_KEY} from "../mailApiKey";
+import {clientUrl, emailSender} from '../constants'
+sgMail.setApiKey(SENDGRID_KEY)
 
 export const sendSignUpMail = (email: string, token:string) => {
-  const baseUrl = 'https://gentle-crag-71071.herokuapp.com/signup/'
+  const baseUrl = `${clientUrl}/signup/`
   const msg = {
     to: email,
-    from: sender,
+    from: emailSender,
     subject: 'Uitnodiging voor Flexicon',
     text: `Hallo,\n
              \n
@@ -32,10 +30,10 @@ export const sendSignUpMail = (email: string, token:string) => {
 }
 
 export const sendForgotPasswordMail = (email: string, token:string) => {
-  const baseUrl = 'https://gentle-crag-71071.herokuapp.com/wachtwoordvergeten/'
-  const msg = {
+  const baseUrl = `${clientUrl}/wachtwoordvergeten/`
+    const msg = {
     to: email,
-    from: sender,
+    from: emailSender,
     subject: 'Wachtwoord opnieuw instellen voor Flexicon account',
     text: `Hallo,\n
              \n
