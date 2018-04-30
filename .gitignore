@@ -1,6 +1,6 @@
 node_modules
 .idea
 yarn-error.log
-src/mailApiKey.ts
 public/uploads/*
 !public/uploads/.gitkeep
+target

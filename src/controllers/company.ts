@@ -1,9 +1,8 @@
 import {
-  JsonController, Authorized, CurrentUser, Post, Param, HttpCode, NotFoundError, BadRequestError, Get,
-  Body, UploadedFile
+  JsonController, Authorized, CurrentUser, Post, Param, NotFoundError, BadRequestError, Get,
+  Body
 } from 'routing-controllers'
 import {Order} from '../entities/order'
-import {User} from '../entities/user'
 import {Company} from '../entities/company'
 
 @JsonController()

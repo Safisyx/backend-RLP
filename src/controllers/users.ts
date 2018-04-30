@@ -90,7 +90,8 @@ export default class UserController {
     try {
       await sendSignUpMail(userToSend.email, jwt)
     } catch(err) {
-      return { message: err.message }
+      console.log(`Error with sendgrid: ${err.message}`)
+      return await Company.findOneById(companyId)
     }
 
     return await Company.findOneById(companyId)
